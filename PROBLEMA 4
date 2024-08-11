@@ -1,0 +1,21 @@
+import csv
+
+def procesar_temperaturas():
+    temperaturas = []
+    with open('temperaturas.txt', 'r') as file:
+        lector_csv = csv.reader(file)
+        for linea in lector_csv:
+            fecha, temperatura = linea
+            temperaturas.append(float(temperatura))
+    
+    temp_max = max(temperaturas)
+    temp_min = min(temperaturas)
+    temp_promedio = sum(temperaturas) / len(temperaturas)
+    
+    with open('resumen_temperaturas.txt', 'w') as file:
+        file.write(f"Temperatura máxima: {temp_max}\n")
+        file.write(f"Temperatura mínima: {temp_min}\n")
+        file.write(f"Temperatura promedio: {temp_promedio:.2f}\n")
+
+if __name__ == "__main__":
+    procesar_temperaturas()
