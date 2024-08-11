@@ -1,0 +1,38 @@
+import requests
+import sqlite3
+
+def obtener_tipo_cambio():
+    try:
+        respuesta = requests.get("https://api.apis.net.pe/v1/tipo-cambio-sunat")
+        return respuesta.json()
+    except requests.RequestException:
+        print("Error al consultar la API.")
+        return None
+
+def almacenar_tipo_cambio(datos):
+    conn = sqlite3.connect('base.db')
+    cursor = conn.cursor()
+    cursor.execute('''CREATE TABLE IF NOT EXISTS sunat_info 
+                      (fecha TEXT, compra REAL, venta REAL)''')
+    
+    for dato in datos:
+        cursor.execute('''INSERT INTO sunat_info (fecha, compra, venta) 
+                          VALUES (?, ?, ?)''', (dato['fecha'], dato['compra'], dato['venta']))
+    
+    conn.commit()
+    conn.close()
+
+def mostrar_tabla():
+    conn = sqlite3.connect('base.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM sunat_info")
+    registros = cursor.fetchall()
+    for registro in registros:
+        print(registro)
+    conn.close()
+
+if __name__ == "__main__":
+    datos = obtener_tipo_cambio()
+    if datos:
+        almacenar_tipo_cambio(datos)
+        mostrar_tabla()
