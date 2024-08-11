@@ -1,0 +1,17 @@
+def contar_lineas_codigo(ruta_archivo):
+    try:
+        with open(ruta_archivo, 'r') as file:
+            lineas = file.readlines()
+            lineas_codigo = [linea for linea in lineas if linea.strip() and not linea.strip().startswith("#")]
+        print(f"Número de líneas de código: {len(lineas_codigo)}")
+    except FileNotFoundError:
+        print("El archivo no se encontró.")
+    except Exception as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    ruta = input("Ingrese la ruta del archivo .py: ")
+    if ruta.endswith(".py"):
+        contar_lineas_codigo(ruta)
+    else:
+        print("El archivo ingresado no es un archivo .py válido.")
