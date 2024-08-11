@@ -1,0 +1,24 @@
+import csv
+import sqlite3
+
+def obtener_tipo_cambio(fecha):
+    conn = sqlite3.connect('base.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT compra, venta FROM sunat_info WHERE fecha=?", (fecha,))
+    resultado = cursor.fetchone()
+    conn.close()
+    return resultado
+
+def solarizar_precios():
+    with open('ventas.csv', 'r') as file:
+        lector_csv = csv.reader(file)
+        for linea in lector_csv:
+            producto, precio_dolares, fecha = linea
+            precio_dolares = float(precio_dolares)
+            tipo_cambio = obtener_tipo_cambio(fecha)
+            if tipo_cambio:
+                precio_soles = precio_dolares * tipo_cambio[1]  # Usamos el tipo de cambio de venta
+                print(f"Producto: {producto} - Precio en Dólares: {precio_dolares} - Precio en Soles: {precio_soles:.2f}")
+
+if __name__ == "__main__":
+    solarizar_precios()
