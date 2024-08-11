@@ -1,0 +1,17 @@
+from pyfiglet import Figlet
+import random
+
+def generar_texto_ascii():
+    figlet = Figlet()
+    fuentes_disponibles = figlet.getFonts()
+    
+    fuente = input("Ingrese el nombre de una fuente (o presione enter para una aleatoria): ")
+    if not fuente:
+        fuente = random.choice(fuentes_disponibles)
+    
+    figlet.setFont(font=fuente)
+    texto = input("Ingrese el texto a mostrar: ")
+    print(figlet.renderText(texto))
+
+if __name__ == "__main__":
+    generar_texto_ascii()
